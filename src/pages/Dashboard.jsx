@@ -1,18 +1,47 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from 'react';
+import { useEffect } from 'react';
 import DashboardIcon from "@mui/icons-material/DashboardCustomize";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
+import axios from "axios";
 import "../styles/Dashboard.css";
 import "./Login";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate(); // Hook para la redirección
 
-  const handleUserClick = () => {
-    navigate("/Login"); // Redirige al Login
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Verifica si el token existe
+
+    if (!token) {
+      setIsAuthenticated(false); // Si no hay token, redirige al login
+      navigate('/login'); // Redirige al login
+    } else {
+      // Si el token existe, puedes hacer una solicitud al backend para verificarlo
+      axios.get('http://localhost:5000/api/auth-check', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
+      })
+      .catch(() => {
+        setIsAuthenticated(false); // Si la verificación falla, desautentica al usuario
+        navigate('/login'); // Redirige al login si la verificación falla
+      });
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Eliminar el token al cerrar sesión
+    navigate('/login'); // Redirigir al login
   };
+
+  if (!isAuthenticated) {
+    return <div>Cargando...</div>; // O puedes mostrar un loader mientras se verifica la autenticación
+  }
 
   return (
     <div className="d-flex">
@@ -44,7 +73,7 @@ const Dashboard = () => {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <div className="container-fluid">
             <span className="navbar-brand">Dashboard</span>
-            <button className="btn btn-outline-danger">Cerrar Sesión</button>
+            <button className="btn btn-outline-danger" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         </nav>
 
