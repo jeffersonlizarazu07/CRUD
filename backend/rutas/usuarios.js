@@ -1,6 +1,6 @@
 import express from 'express';
 import connection from '../database/db';
-import bcrypt from 'bcrypt'; // Importar bcrypt
+import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
@@ -149,4 +149,3 @@ router.delete('/:id', (req, res) => {
 });
 
 export default router;
-

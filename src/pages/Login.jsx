@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '/Users/lizarazurondon.5/CRUD/src/styles/login.css';
+import '../styles/Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,18 +15,19 @@ const Login = () => {
     console.log("Datos enviados al backend", {email, user_password});
 
     try {
-      const response = await axios.post('http://localhost:3001/usuarios.js', 
-      { email, user_password }, { withCredentials: true });
+      const response = await axios.post('http://localhost:3001/usuarios/login', { email, user_password }, { withCredentials: true });
 
       console.log(response.data);
       
       // Redirigir al dashboard si el login es exitoso
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Error en login', error.response?.data || error.message);
-      setError('Correo o contraseña incorrectos');
-    }
-  };
+      if (navigate === 200) {
+        navigate('/dashboard');
+      }
+      } catch (error) {
+        console.error('Error en login', error.response?.data || error.message);
+        setError('Correo o contraseña incorrectos');
+      }
+    };
 
   return (
     <div className="login-container">

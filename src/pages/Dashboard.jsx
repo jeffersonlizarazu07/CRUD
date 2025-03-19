@@ -20,9 +20,8 @@ const Dashboard = () => {
       setIsAuthenticated(false); // Si no hay token, redirige al login
       navigate('/login'); // Redirige al login
     } else {
-      // Si el token existe, puedes hacer una solicitud al backend para verificarlo
-      axios.get('http://localhost:5000/api/auth-check', {
-        headers: { Authorization: `Bearer ${token}` },
+      
+      axios.get('http://localhost:3001/usuarios/dashboard', {headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
@@ -40,7 +39,7 @@ const Dashboard = () => {
   };
 
   if (!isAuthenticated) {
-    return <div>Cargando...</div>; // O puedes mostrar un loader mientras se verifica la autenticación
+    return <div>Cargando...</div>; 
   }
 
   return (

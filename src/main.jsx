@@ -14,8 +14,8 @@ createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />  {/* Página de Login como principal */}
-        <Route path="/dashboard" element={<Dashboard />} />  {/* Página de Dashboard después de login */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   </React.StrictMode>

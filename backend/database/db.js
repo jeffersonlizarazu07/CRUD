@@ -22,11 +22,6 @@ db.connect((err) => {
   }
 });
 
-// Ruta para verificar que la API está funcionando
-app.get('/', (req, res) => {
-  res.send('API funcionando');
-});
-
 // Ruta para obtener datos de la base de datos
 app.get('/data', (req, res) => {
   db.query('SELECT * FROM usuario', (err, results) => {  
@@ -37,11 +32,6 @@ app.get('/data', (req, res) => {
       res.json(results);
     }
   });
-});
-
-// Iniciar el servidor Express
-app.listen(3002, () => {
-  console.log('Servidor Express escuchando en puerto 3002');
 });
 
 export default db;
