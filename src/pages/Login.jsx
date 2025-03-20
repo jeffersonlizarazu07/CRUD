@@ -20,14 +20,14 @@ const Login = () => {
       console.log(response.data);
       
       // Redirigir al dashboard si el login es exitoso
-      if (navigate === 200) {
+      if (response.status === 200) {  // Verifica que el estado sea 200
         navigate('/dashboard');
       }
-      } catch (error) {
-        console.error('Error en login', error.response?.data || error.message);
-        setError('Correo o contraseña incorrectos');
-      }
-    };
+    } catch (error) {
+      console.error('Error en login', error.response?.data || error.message);
+      setError('Correo o contraseña incorrectos');
+    }
+  };
 
   return (
     <div className="login-container">

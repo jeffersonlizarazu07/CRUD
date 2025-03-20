@@ -1,5 +1,5 @@
 import express from 'express';
-import connection from '../database/db';
+import connection from '../database/db.js';
 import bcrypt from 'bcrypt';
 
 const router = express.Router();
@@ -95,8 +95,13 @@ router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { nombre, email, user_password } = req.body;
 
+  // Validar si los campos requeridos no están vacíos
+  if (!nombre || !email) {
+    return res.status(400).json({ message: 'El nombre y el email son requeridos' });
+  }
+
   let query = 'UPDATE usuario SET nombre = ?, email = ? WHERE id = ?';
-  const params = [nombre, email, id];
+  let params = [nombre, email, id];
 
   // Si se proporciona una nueva contraseña, hashearla antes de actualizarla
   if (user_password) {
@@ -105,33 +110,43 @@ router.put('/:id', (req, res) => {
         return res.status(500).json({ message: 'Error al hashear la contraseña', error: err });
       }
 
+      // Si hay una nueva contraseña, actualizarla en la consulta SQL
       query = 'UPDATE usuario SET nombre = ?, email = ?, user_password = ? WHERE id = ?';
       params.push(hashedPassword);
 
+      // Ejecutar la consulta de actualización
       connection.query(query, params, (err, results) => {
         if (err) {
+          console.error('Error al ejecutar la consulta:', err);
           return res.status(500).json({ message: 'Error al actualizar el usuario', error: err });
         }
+
+        // Verificar si alguna fila fue afectada
         if (results.affectedRows > 0) {
-          res.json({ message: 'Usuario actualizado' });
+          return res.json({ message: 'Usuario actualizado correctamente' });
         } else {
-          res.status(404).json({ message: 'Usuario no encontrado' });
+          return res.status(404).json({ message: 'Usuario no encontrado' });
         }
       });
     });
   } else {
+    // Si no hay nueva contraseña, solo actualizar nombre y email
     connection.query(query, params, (err, results) => {
       if (err) {
+        console.error('Error al ejecutar la consulta:', err);
         return res.status(500).json({ message: 'Error al actualizar el usuario', error: err });
       }
+
+      // Verificar si alguna fila fue afectada
       if (results.affectedRows > 0) {
-        res.json({ message: 'Usuario actualizado' });
+        return res.json({ message: 'Usuario actualizado correctamente' });
       } else {
-        res.status(404).json({ message: 'Usuario no encontrado' });
+        return res.status(404).json({ message: 'Usuario no encontrado' });
       }
     });
   }
 });
+
 
 // Ruta para eliminar un usuario
 router.delete('/:id', (req, res) => {
