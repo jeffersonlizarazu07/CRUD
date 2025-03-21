@@ -92,16 +92,18 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Juan Méndez</td>
-                <td>juan@example.com</td>
-                <td>Administrador</td>
+            {usuarios.map((usuario) => (
+              <tr key={usuario.id}>
+      <td>{usuario.id}</td>
+      <td>{usuario.nombre}</td>
+      <td>{usuario.email}</td>
+      <td>{usuario.rol}</td>
                 <td>
                   <button className="btn btn-warning btn-sm">✏️</button>
                   <button className="btn btn-danger btn-sm">🗑️</button>
                 </td>
               </tr>
+            ))}
               <tr>
                 <td>2</td>
                 <td>María López</td>
