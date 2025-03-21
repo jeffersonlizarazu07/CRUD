@@ -17,8 +17,10 @@ app.use(cors(corsOptions));
 app.use(express.json()); 
 
 // Usar las rutas para los usuarios
-app.use('/usuarios', usuariosRoutes);  
-console.log();
+
+//Ruta Register
+app.use('/usuarios', usuariosRoutes);   
+
 // Iniciar el servidor
 const PORT = 3001;
 app.listen(PORT, () => {

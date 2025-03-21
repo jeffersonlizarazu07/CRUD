@@ -28,6 +28,7 @@ const Login = () => {
 
         return navigate('/dashboard');
       }
+      
     } catch (error) {
       console.error('Error en login', error.response?.data || error.message);
       setError('Correo o contraseña incorrectos');
@@ -68,7 +69,7 @@ const Login = () => {
             />
           </div>
           <button type="submit" className="btn btn-primary btn-block w-100">Ingresar</button>
-          
+
         </form>
       </div>
     </div>

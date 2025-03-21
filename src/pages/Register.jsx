@@ -8,6 +8,7 @@ import Login from './Login.jsx';
 
 
 const Register = () => {
+
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [user_password, setPassword] = useState('');
@@ -16,30 +17,36 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     console.log("Datos enviados al backend", {nombre, email, user_password});
-    
-    
+  
+    // Validación de los campos
+    if (!nombre || !email || !user_password) {
+      setError('Todos los campos son obligatorios.');
+      return;
+    }
+  
     try {
-      const response = await axios.post('http://localhost:3001/usuarios/login', { nombre, email, user_password }, { withCredentials: true });
-
+      const response = await axios.post('http://localhost:3001/usuarios', { nombre, email, user_password }, { withCredentials: true });
+  
       console.log(response.data);
       
-      //Redirigir al login si el registro fue exitoso
-
-      if (response.status >= 200 && response.status < 300) {  // Verifica que el estado sea 200
-        
+      // Redirigir al login si el registro fue exitoso
+      if (response.status >= 200 && response.status < 300) {  
         console.log(response.status);
-
         return navigate('/login');
       }
- 
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Error al registrarse. Intente nuevamente.');
+    } catch (error) {
+      console.error('Error en el registro', error.response?.data || error.message);
+  
+      // Mostrar mensaje de error específico si el correo ya está registrado
+      if (error.response?.data?.message === 'El correo electrónico ya está registrado') {
+        setError('Este correo electrónico ya está registrado.');
+      } else {
+        setError('Error al registrarse. Intente nuevamente.');
+      }
     }
   };
-
   return (
     <div className="login-container">
       <div className="card">
