@@ -18,7 +18,7 @@ createRoot(root).render(
     <Router>
       <Routes>
         <Route path="/" element={<Registrer />}/>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="Dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
