@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import './Dashboard.jsx'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,8 +21,12 @@ const Login = () => {
       console.log(response.data);
       
       // Redirigir al dashboard si el login es exitoso
-      if (response.status === 200) {  // Verifica que el estado sea 200
-        navigate('/dashboard');
+      
+      if (response.status >= 200 && response.status < 300) {  // Verifica que el estado sea 200
+        
+        console.log(response.status);
+
+        return navigate('/dashboard');
       }
     } catch (error) {
       console.error('Error en login', error.response?.data || error.message);

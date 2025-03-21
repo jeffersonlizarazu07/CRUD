@@ -10,37 +10,34 @@ import "../styles/Dashboard.css";
 import "./Login";
 
 const Dashboard = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate(); // Hook para la redirección
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const navigate = useNavigate(); // Hook para la redirección
 
-  useEffect(() => {
-    const token = localStorage.getItem('token'); // Verifica si el token existe
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token'); // Verifica si el token existe
 
-    if (!token) {
-      setIsAuthenticated(false); // Si no hay token, redirige al login
-      navigate('/login'); // Redirige al login
-    } else {
+  //   if (!token) {
+  //     setIsAuthenticated(false); // Si no hay token, redirige al login
+  //     navigate('/login'); // Redirige al login
+  //   } else {
       
-      axios.get('http://localhost:3001/usuarios/dashboard', {headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(() => {
-        setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
-      })
-      .catch(() => {
-        setIsAuthenticated(false); // Si la verificación falla, desautentica al usuario
-        navigate('/login'); // Redirige al login si la verificación falla
-      });
-    }
-  }, [navigate]);
+  //     axios.get('http://localhost:3001/usuarios/dashboard', {headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then(() => {
+  //       setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
+  //     })
+  //     .catch(() => {
+  //       setIsAuthenticated(false); // Si la verificación falla, desautentica al usuario
+  //       navigate('/login'); // Redirige al login si la verificación falla
+  //     });
+  //   }
+  // }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Eliminar el token al cerrar sesión
     navigate('/login'); // Redirigir al login
   };
 
-  if (!isAuthenticated) {
-    return <div>Cargando...</div>; 
-  }
 
   return (
     <div className="d-flex">
