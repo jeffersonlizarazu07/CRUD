@@ -3,48 +3,52 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 import './Dashboard.jsx'
+import '../styles/Register.css'; // Correcto
+import Login from './Login.jsx';
 
-const Login = () => {
+
+const Register = () => {
+  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [user_password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();  // hook para navegación
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-
-    console.log("Datos enviados al backend", {email, user_password});
-
     try {
-      const response = await axios.post('http://localhost:3001/usuarios/login', { email, user_password }, { withCredentials: true });
-
-      console.log(response.data);
-      
-      // Redirigir al dashboard si el login es exitoso
-      
-      if (response.status >= 200 && response.status < 300) {  // Verifica que el estado sea 200
-        
-        console.log(response.status);
-
-        return navigate('/dashboard');
-      }
-    } catch (error) {
-      console.error('Error en login', error.response?.data || error.message);
-      setError('Correo o contraseña incorrectos');
+      // Aquí iría la llamada a la API
+      // Ejemplo: const response = await axios.post('/api/register', { email, password, nombre });
+      // Si la respuesta es exitosa, navega a otra página.
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Error al registrar. Intente nuevamente.');
     }
   };
 
   return (
     <div className="login-container">
       <div className="card">
-        <h3 className="text-center mb-4">Iniciar Sesión</h3>
+        <h3 className="text-center mb-4">Registrarse</h3>
 
-        {/* Mostrar mensaje de error si existe */}
         {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
-        <form onSubmit={handleLogin}>
-          <div className="form-group mb-3">
-            <label htmlFor="email">Usuario</label>
+        <form onSubmit={handleRegister}>
+          <div className="form-group mb-2">
+            <label htmlFor="nombre">Nombre</label>
+            <input
+              type="text"
+              className="form-control"
+              id="nombre"
+              placeholder="Nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group mb-2">
+            <label htmlFor="email">Correo</label>
             <input
               type="email"
               className="form-control"
@@ -55,6 +59,7 @@ const Login = () => {
               required
             />
           </div>
+
           <div className="form-group mb-4">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -67,12 +72,12 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-block w-100">Ingresar</button>
-          
+
+          <button type="submit" className="btn btn-primary btn-block w-100">Registrarse</button>
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

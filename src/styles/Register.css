@@ -1,0 +1,66 @@
+/* Registrer */
+
+/* Estilos del contenedor que centra el formulario */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url("/src/assets/tool-4311573_1280.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  /* Estilos de la tarjeta del formulario */
+  .card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: gainsboro;
+    margin-bottom: 80px;
+  }
+  
+  /* Estilo del título */
+  .card h3 {
+    margin-bottom: 20px;
+  }
+  
+  /* Botón primario */
+  .card .btn-primary {
+    background-color: #737980;
+    border: none;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .card .btn-primary:hover {
+    background-color: #496653;
+  }
+  
+  /* Estilo para los campos de formulario */
+  .card .form-control {
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 1rem;
+  }
+  
+  /* Enlace al registro */
+  .card a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .card a:hover {
+    color: #0056b3;
+  }
+  
+  /* Mensaje de error */
+  .alert {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
