@@ -16,20 +16,34 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    console.log("Datos enviados al backend", {nombre, email, user_password});
+    
+    
     try {
-      // Aquí iría la llamada a la API
-      // Ejemplo: const response = await axios.post('/api/register', { email, password, nombre });
-      // Si la respuesta es exitosa, navega a otra página.
+      const response = await axios.post('http://localhost:3001/usuarios/login', { nombre, email, user_password }, { withCredentials: true });
+
+      console.log(response.data);
+      
+      //Redirigir al login si el registro fue exitoso
+
+      if (response.status >= 200 && response.status < 300) {  // Verifica que el estado sea 200
+        
+        console.log(response.status);
+
+        return navigate('/login');
+      }
+ 
       navigate('/dashboard');
     } catch (err) {
-      setError('Error al registrar. Intente nuevamente.');
+      setError('Error al registrarse. Intente nuevamente.');
     }
   };
 
   return (
     <div className="login-container">
       <div className="card">
-        <h3 className="text-center mb-4">Registrarse</h3>
+        <h3 className="text-center mb-4">Registro</h3>
 
         {error && <div className="alert alert-danger" role="alert">{error}</div>}
 

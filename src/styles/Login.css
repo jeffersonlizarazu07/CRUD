@@ -28,6 +28,11 @@
   margin-bottom: 20px;
 }
 
+label {
+  margin-bottom: 8px;
+}
+
+
 /* Botón primario */
 .card .btn-primary {
   background-color: #737980;
