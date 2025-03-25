@@ -15,38 +15,45 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const btnLogin = () => {
+    navigate("/login"); // Redirige a la página de login
+  };
+
+
   const handleRegister = async (e) => {
     e.preventDefault();
-  
-    console.log("Datos enviados al backend", {nombre, email, user_password});
-  
-    // Validación de los campos
+
+    console.log("Datos enviados al backend", { nombre, email, user_password });
+
+    // Validación campos
     if (!nombre || !email || !user_password) {
       setError('Todos los campos son obligatorios.');
       return;
     }
-  
+
     try {
       const response = await axios.post('http://localhost:3001/usuarios', { nombre, email, user_password }, { withCredentials: true });
-  
+
       console.log(response.data);
-      
+
       // Redirigir al login si el registro fue exitoso
-      if (response.status >= 200 && response.status < 300) {  
+      if (response.status >= 200 && response.status < 300) {
         console.log(response.status);
         return navigate('/login');
       }
     } catch (error) {
       console.error('Error en el registro', error.response?.data || error.message);
-  
+
       // Mostrar mensaje de error específico si el correo ya está registrado
       if (error.response?.data?.message === 'El correo electrónico ya está registrado') {
         setError('Este correo electrónico ya está registrado.');
       } else {
         setError('Error al registrarse. Intente nuevamente.');
       }
-    }
+
+    };
   };
+
   return (
     <div className="login-container">
       <div className="card">
@@ -93,6 +100,8 @@ const Register = () => {
               required
             />
           </div>
+
+          <button type="submit" className="btn btn-secundary btn-block w-100" onClick={btnLogin}>Iniciar Sesión</button>
 
           <button type="submit" className="btn btn-primary btn-block w-100">Registrarse</button>
         </form>
