@@ -10,6 +10,8 @@ import { Try } from '@mui/icons-material';
 const Dashboard = () => {
   const [usuarios, setUsuarios] = useState([]);
   const navigate = useNavigate();
+  const [usuarioEditado, setUsuarioEditado] = useState(null);
+
 
   // Obtener usuarios
   const buscarUsuarios = async () => {
@@ -36,9 +38,24 @@ const Dashboard = () => {
     }
   }
 
-    const actualizarUsuario = async () => {
-      
+  const actualizarUsuario = async (usuarioActualizado) => {
+    try {
+      await axios.put(`http://localhost:3001/usuarios/${usuarioActualizado.id}`, usuarioActualizado);
+
+     
+      setUsuarios(prevUsuarios =>
+        prevUsuarios.map(usuario =>
+          usuario.id === usuarioActualizado.id ? usuarioActualizado : usuario
+        )
+      );
+
+      setUsuarioEditado(null); // Cierra el formulario después de la edición
+      console.log(`Usuario con ID ${usuarioActualizado.id} actualizado`);
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      alert("Hubo un problema al actualizar el usuario. Intenta nuevamente.");
     }
+  };
 
   // Cargar usuarios al montar el componente
   useEffect(() => {
@@ -77,6 +94,24 @@ const Dashboard = () => {
 
         <h2 className="mb-3">Gestión de Usuarios</h2>
         <div className="d-flex justify-content-between mb-3">
+
+          {usuarioEditado && (
+            <div className="modal">
+              <h3>Editar Usuario</h3>
+              <input
+                type="text"
+                value={usuarioEditado?.nombre || ""}
+                onChange={(e) => setUsuarioEditado({ ...usuarioEditado, nombre: e.target.value })}
+              />
+              <input
+                type="email"
+                value={usuarioEditado?.email || ""}
+                onChange={(e) => setUsuarioEditado({ ...usuarioEditado, email: e.target.value })}
+              />
+              <button className="btn btn-primary" onClick={() => actualizarUsuario(usuarioEditado)}>Guardar</button>
+              <button className="btn btn-secondary" onClick={() => setUsuarioEditado(null)}>Cancelar</button>
+            </div>
+          )}
           <button className="btn btn-success">Agregar Usuario</button>
           <input type="text" className="form-control w-25" placeholder="Buscar..." />
         </div>

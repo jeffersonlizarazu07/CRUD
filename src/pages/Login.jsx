@@ -10,6 +10,10 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();  // hook para navegación
 
+  const btnRegister = () => {
+    navigate("/"); // Redirige a la página de login
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -69,6 +73,8 @@ const Login = () => {
             />
           </div>
           <button type="submit" className="btn btn-primary btn-block w-100">Ingresar</button>
+
+          <button type="submit" className="btn btn-secundary btn-block w-100" onClick={btnRegister}>Registrarse</button>
 
         </form>
       </div>

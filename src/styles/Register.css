@@ -32,8 +32,36 @@
     margin-bottom: 8px;
   }
   
+   /* Botón secundario */
+  .card .btn-secundary {
+    background-color: #737980;
+    border: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    color: white;
+  }
+
+  .card .btn-secundary {
+    background-color: #737980;
+    border: none;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .card .btn-secundary:hover {
+    background-color: #496653;
+  }
+  
   /* Botón primario */
   .card .btn-primary {
+    background-color: #737980;
+    border: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    ;
+  }
+
+    .card .btn-primary {
     background-color: #737980;
     border: none;
     padding: 10px;
