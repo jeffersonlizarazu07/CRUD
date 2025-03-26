@@ -21,9 +21,6 @@ router.post('/login', (req, res) => {
     if (results.length > 0) {
       const user = results[0];
 
-      console.log('Contraseña ingresada:', user_password);  // Contraseña ingresada por el usuario
-      console.log('Contraseña almacenada en la base de datos:', user.user_password);  // Contraseña hasheada en la base de datos
-
       bcrypt.compare(user_password, user.user_password, (err, isMatch) => {
         if (err) { 
           console.log("Error al comparar contraseñas", err)
@@ -94,6 +91,9 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { nombre, email, user_password } = req.body;
+
+  console.log("ID recibido en el backend:", id);
+  console.log("Datos recibidos en el backend:", req.body);
 
   // Validar si los campos requeridos no están vacíos
   if (!nombre || !email) {
