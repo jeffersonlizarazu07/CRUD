@@ -5,6 +5,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import axios from "axios";
 import "../styles/Dashboard.css";
+import { Try } from '@mui/icons-material';
 
 const Dashboard = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -21,12 +22,30 @@ const Dashboard = () => {
     }
   };
 
+  const eliminarUsuario = async (id) => {
+
+    const confirmacion = window.confirm("¿Desea eliminar este usuario?");
+    if (!confirmacion) return;
+
+    try {
+      await axios.delete(`http://localhost:3001/usuarios/${id}`); // Ajusta la URL según tu backend
+      setUsuarios(usuarios.filter(usuario => usuario.id !== id)); // Filtra los usuarios eliminando el seleccionado
+      window.confirm(`Usuario eliminado exitosamente`);
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+    }
+  }
+
+    const actualizarUsuario = async () => {
+      
+    }
+
   // Cargar usuarios al montar el componente
   useEffect(() => {
     buscarUsuarios();
   }, []);
 
-  // Cerrar sesión (por ahora solo redirige)
+  // Cerrar sesión
   const handleLogout = () => {
     navigate('/login');
   };
@@ -83,7 +102,7 @@ const Dashboard = () => {
                     <td>{usuario.rol}</td>
                     <td>
                       <button className="btn btn-warning btn-sm">✏️</button>
-                      <button className="btn btn-danger btn-sm">🗑️</button>
+                      <button className="btn btn-danger btn-sm" onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
                     </td>
                   </tr>
                 ))
