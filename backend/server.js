@@ -26,7 +26,6 @@ app.use('/usuarios', usuariosRoutes);
 // Iniciar el servidor
 const PORT = 3001;
 app.listen(PORT, () => {
-  console.log(process.env.SECRET_JWT_KEY)
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
 

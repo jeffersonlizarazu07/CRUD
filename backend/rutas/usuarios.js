@@ -6,15 +6,16 @@ import util from 'util';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 const router = express.Router();
 
 // Ruta para autenticar el login
+
 const query = util.promisify(connection.query).bind(connection);
 
 export const loginUser = async (req, res) => {
-    
   try {
     const { email, user_password } = req.body;
 
@@ -31,27 +32,32 @@ export const loginUser = async (req, res) => {
     const user = results[0];
     const isMatch = await bcrypt.compare(user_password, user.user_password);
 
-    if (isMatch) {
-
-      // const token = jwt.sign({ userId: user.id, email: user.email, userPassword: user.user_password},
-      //   process.env.SECRET_JWT_KEY, 
-      //     { expiresIn: '1h' }
-      //   );
-
-      const token= jwt.sign({userId: user.id, email: user.email, userPassword: user.user_password},
-        process.env.SECRET_JWT_KEY,
-        {expiresIn:'1h'})
-    
-      return res.json({ message: 'Usuario autenticado', userId: user.id, token });
-    } else {
+    if (!isMatch) {
       return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
     }
+
+    // Generar el token y enviarlo en una cookie
+    const token = jwt.sign(
+      { userId: user.id, email: user.email }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 3600000 // 1 hora
+    });
+
+    return res.status(200).json({ message: 'Credenciales validadas' });
 
   } catch (err) {
     console.error('Error en el proceso de autenticación:', err);
     return res.status(500).json({ message: 'Error en el servidor', error: err.message });
   }
 };
+
 
 // Resto de las rutas (crear, obtener, actualizar, eliminar usuarios)
 router.get('/', (req, res) => {
