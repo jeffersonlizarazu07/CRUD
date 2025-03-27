@@ -1,43 +1,57 @@
 import express from 'express';
 import connection from '../database/db.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import util from 'util';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
 // Ruta para autenticar el login
-router.post('/login', (req, res) => {
-  const { email, user_password } = req.body;
+const query = util.promisify(connection.query).bind(connection);
 
-  if (!email || !user_password) {
-    return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-  }
+export const loginUser = async (req, res) => {
+    
+  try {
+    const { email, user_password } = req.body;
 
-  connection.query('SELECT * FROM usuario WHERE email = ?', [email], (err, results) => {
-    if (err) {
-      console.log("Error al verificar el usuario", err)
-      return res.status(500).json({ message: 'Error al verificar el usuario', error: err });
+    if (!email || !user_password) {
+      return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
     }
 
-    if (results.length > 0) {
-      const user = results[0];
+    const results = await query('SELECT * FROM usuario WHERE email = ?', [email]);
 
-      bcrypt.compare(user_password, user.user_password, (err, isMatch) => {
-        if (err) { 
-          console.log("Error al comparar contraseñas", err)
-          return res.status(500).json({ message: 'Error al verificar la contraseña', error: err });
-        }
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
 
-        if (isMatch) {
-          res.json({ message: 'Usuario autenticado', userId: user.id });
-        } else {
-          res.status(401).json({ message: 'Correo o contraseña incorrectos' });
-        }
-      });
+    const user = results[0];
+    const isMatch = await bcrypt.compare(user_password, user.user_password);
+
+    if (isMatch) {
+
+      // const token = jwt.sign({ userId: user.id, email: user.email, userPassword: user.user_password},
+      //   process.env.SECRET_JWT_KEY, 
+      //     { expiresIn: '1h' }
+      //   );
+
+      const token= jwt.sign({userId: user.id, email: user.email, userPassword: user.user_password},
+        process.env.SECRET_JWT_KEY,
+        {expiresIn:'1h'})
+    
+      return res.json({ message: 'Usuario autenticado', userId: user.id, token });
     } else {
-      res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
     }
-  });
-});
+
+  } catch (err) {
+    console.error('Error en el proceso de autenticación:', err);
+    return res.status(500).json({ message: 'Error en el servidor', error: err.message });
+  }
+};
 
 // Resto de las rutas (crear, obtener, actualizar, eliminar usuarios)
 router.get('/', (req, res) => {
