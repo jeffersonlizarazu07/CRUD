@@ -90,6 +90,7 @@ const Dashboard = () => {
     try {
       await axios.post('http://localhost:3001/usuarios/logout', {}, { withCredentials: true });
       console.log('Sesión cerrada exitosamente');
+      window.location.reload();
       navigate('/login');
     } catch (error) {
       console.error('Error al cerrar sesión', error.response?.data || error.message);
@@ -111,6 +112,9 @@ const Dashboard = () => {
     return () => window.removeEventListener("popstate", manejarHistorial);
   }, [navigate]);
 
+  const iconDash = () => {
+    navigate("/dashboard");
+  }
 
 return (
   <div className="d-flex">
@@ -132,7 +136,7 @@ return (
     <div className="container-fluid p-4">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <span className="navbar-brand">Dashboard</span>
+          <span className="navbar-brand" onClick={iconDash}>Dashboard</span>
           <button className="btn btn-outline-danger" onClick={cerrarSesion}>Cerrar Sesión</button>
         </div>
       </nav>
