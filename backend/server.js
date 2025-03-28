@@ -21,7 +21,9 @@ app.use(express.json());
 // Usar las rutas para los usuarios
 
 //Ruta Register
-app.use('/usuarios', usuariosRoutes);   
+app.use('/usuarios', usuariosRoutes);
+
+app.use('/usuarios/login', usuariosRoutes);
 
 // Iniciar el servidor
 const PORT = 3001;

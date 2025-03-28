@@ -10,12 +10,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const router = express.Router();
-
-// Ruta para autenticar el login
-
 const query = util.promisify(connection.query).bind(connection);
 
-export const loginUser = async (req, res) => {
+// Controlador para manejar el inicio de sesión
+const loginUser = async (req, res) => {
+  console.log(req.body);
+
   try {
     const { email, user_password } = req.body;
 
@@ -38,8 +38,8 @@ export const loginUser = async (req, res) => {
 
     // Generar el token y enviarlo en una cookie
     const token = jwt.sign(
-      { userId: user.id, email: user.email }, 
-      process.env.JWT_SECRET, 
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -58,8 +58,39 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// Definir la ruta para el inicio de sesión
+router.post('/login', loginUser);
 
-// Resto de las rutas (crear, obtener, actualizar, eliminar usuarios)
+// Middleware para verificar el token
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token; // Leer la cookie
+
+  if (!token) {
+    return res.status(401).json({ message: 'Acceso denegado, token no proporcionado' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token inválido' });
+    }
+    req.user = decoded; // Guardar datos del usuario en req.user
+    next();
+  });
+};
+
+// Verificar si el usuario cuenta con sesión activa
+router.get('/verify', verifyToken, (req, res) => {
+  res.json({ message: 'Autenticado', user: req.user });
+});
+
+// Cierre de sesión/eliminar cookie
+router.post('/logout', (req, res) => {
+  res.clearCookie('token', { httpOnly: true, sameSite: 'Strict' });
+  res.json({ message: 'Sesión cerrada correctamente' });
+});
+
+
+// Rutas (crear, obtener, actualizar, eliminar usuarios)
 router.get('/', (req, res) => {
   connection.query('SELECT * FROM usuario', (err, results) => {
     if (err) {

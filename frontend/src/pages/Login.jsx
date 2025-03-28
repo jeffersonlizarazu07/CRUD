@@ -21,6 +21,7 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/usuarios/login', { email, user_password }, { withCredentials: true });
+      console.log(response.data);
       
       // Redirigir al dashboard si el login es exitoso
       
