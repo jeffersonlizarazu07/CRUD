@@ -18,7 +18,7 @@ const Dashboard = () => {
   }, []);
 
   //Buscar usuarios
-  
+
   const buscarUsuarios = async () => {
     try {
       const { data } = await axios.get("http://localhost:3001/usuarios/");
@@ -48,20 +48,20 @@ const Dashboard = () => {
       alert("Error: No se encontró el ID del usuario.");
       return;
     }
-  
+
     try {
       const response = await axios.put(
-        `http://localhost:3001/usuarios/${usuarioActualizado.id}`, 
+        `http://localhost:3001/usuarios/${usuarioActualizado.id}`,
         {
           nombre: usuarioActualizado.nombre,
           email: usuarioActualizado.email,
-          
+
         },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-  
+
       if (response.status === 200) {
         // Actualiza la lista de usuarios en el frontend
         setUsuarios(prevUsuarios =>
@@ -69,7 +69,7 @@ const Dashboard = () => {
             usuario.id === usuarioActualizado.id ? usuarioActualizado : usuario
           )
         );
-  
+
         setUsuarioEditado(null); // Cierra el formulario
         console.log(`✅ Usuario con ID ${usuarioActualizado.id} actualizado.`);
       } else {
@@ -86,11 +86,30 @@ const Dashboard = () => {
     buscarUsuarios();
   }, []);
 
-  // Cerrar sesión
-  const handleLogout = () => {
-    navigate('/login');
-  };
+  const cerrarSesion = async () => {
+    try {
+      await axios.post('http://localhost:3001/usuarios/logout', {}, { withCredentials: true });
+      console.log('Sesión cerrada exitosamente');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error al cerrar sesión', error.response?.data || error.message);
+    }
+    alert("Sesión cerrada exitosamente.")
+  };  
 
+  useEffect(() => {
+    const cerrarSesion = async () => {
+      await axios.post("http://localhost:3001/usuarios/logout", {}, { withCredentials: true });
+      navigate("/login", { replace: true });
+    };
+  
+    const manejarHistorial = () => {
+      cerrarSesion();
+    };
+  
+    window.addEventListener("popstate", manejarHistorial);
+    return () => window.removeEventListener("popstate", manejarHistorial);
+  }, [navigate]);
 
 
 return (
@@ -114,7 +133,7 @@ return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <span className="navbar-brand">Dashboard</span>
-          <button className="btn btn-outline-danger" onClick={handleLogout}>Cerrar Sesión</button>
+          <button className="btn btn-outline-danger" onClick={cerrarSesion}>Cerrar Sesión</button>
         </div>
       </nav>
 

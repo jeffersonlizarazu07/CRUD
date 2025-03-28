@@ -45,9 +45,9 @@ const loginUser = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'development',
       sameSite: 'Strict',
-      maxAge: 3600000 // 1 hora
+      maxAge: 3600000 
     });
 
     return res.status(200).json({ message: 'Credenciales validadas' });
