@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import usuariosRoutes from './rutas/usuarios.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -15,7 +16,7 @@ const corsOptions = {
 dotenv.config();
 
 app.use(cors(corsOptions));
-
+app.use(cookieParser());
 app.use(express.json()); 
 
 // Usar las rutas para los usuarios
